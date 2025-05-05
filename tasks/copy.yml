@@ -1,0 +1,51 @@
+---
+# Static test file contents and permissions.
+#
+# Args:
+#   test_name: str - Test base name.
+#   test_src: str - Source file (source of truth).
+#   test_file: str - Path to remote file to test.
+#   test_owner: str - File owner (UID or username).
+#   test_group: str - File group (GID or groupname).
+#   test_mode: str - File permissions (octal or permission string).
+#   test_diff: bool - Display file diff on failured? Default: False.
+
+- name: '{{ test_name }} | check requirements'  # noqa name[template]
+  ansible.builtin.assert:
+    quiet: true
+    that:
+      - test_name | length > 0
+      - test_src | length > 0
+      - test_file | length > 0
+      - test_owner | length > 0
+      - test_group | length > 0
+      - test_mode | length > 0
+    fail_msg: |
+      tests.copy requires:
+
+      test_name: '{{ test_name }}'
+      test_src: '{{ test_src }}'
+      test_file: '{{ test_file }}'
+      test_owner: '{{ test_owner }}'
+      test_group: '{{ test_group }}'
+      test_mode: '{{ test_mode }}'
+
+- name: '{{ test_name }} | query'  # noqa name[template]
+  ansible.builtin.copy:
+    src: '{{ test_src }}'
+    dest: '{{ test_file }}'
+    owner: '{{ test_owner }}'
+    group: '{{ test_group }}'
+    mode: '{{ test_mode }}'
+  check_mode: true
+  diff: true
+  register: _tests_result
+
+- name: '{{ test_name }} | assert'  # noqa name[template]
+  ansible.builtin.assert:
+    quiet: true
+    that:
+      - not _tests_result.changed
+    fail_msg: >
+      {{ test_file }} is not in expected format
+      {{ _tests_result.diff if test_diff | default(false) else "" }}

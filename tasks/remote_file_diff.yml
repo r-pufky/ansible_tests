@@ -1,0 +1,60 @@
+---
+# Remote test file contents and permissions.
+#
+# Tests requiring run-time options (e.g. injected hashes that must exist but
+# are random per-run) should use this instead of copy test to verify file
+# contents are the same. Both files must exist on the remote system.
+#
+# Args:
+#   test_name: str - Test base name.
+#   test_remote_src: str - Path to remote source file to test.
+#   test_file: str - Path to remote file to test.
+#   test_owner: str - File owner (UID or username).
+#   test_group: str - File group (GID or groupname).
+#   test_mode: str - File permissions (octal or permission string).
+
+- name: '{{ test_name }} | check requirements'  # noqa name[template]
+  ansible.builtin.assert:
+    quiet: true
+    that:
+      - test_name | length > 0
+      - test_remote_src | length > 0
+      - test_file | length > 0
+      - test_owner | length > 0
+      - test_group | length > 0
+      - test_mode | length > 0
+    fail_msg: |
+      tests.remote_file_diff requires:
+
+      test_name: '{{ test_name }}'
+      test_remote_src: '{{ test_remote_src }}'
+      test_file: '{{ test_file }}'
+      test_owner: '{{ test_owner }}'
+      test_group: '{{ test_group }}'
+      test_mode: '{{ test_mode }}'
+
+- name: '{{ test_name }} | query'  # noqa name[template]
+  ansible.builtin.copy:
+    remote_src: true
+    src: '{{ test_remote_src }}'
+    dest: '{{ test_file }}'
+    owner: '{{ test_owner }}'
+    group: '{{ test_group }}'
+    mode: '{{ test_mode }}'
+  check_mode: true
+  register: _tests_result
+
+- name: '{{ test_name }} | remote diff'  # noqa name[template]
+  ansible.builtin.command: 'diff "{{ test_remote_src }}" "{{ test_file }}"'
+  register: _tests_result_diff
+  changed_when: false
+  failed_when: false
+
+- name: '{{ test_name }} | assert'  # noqa name[template]
+  ansible.builtin.assert:
+    quiet: true
+    that:
+      - not _tests_result.changed
+    fail_msg: >
+      {{ test_file }} is not in expected format
+      {{ _tests_result_diff.stdout }}.

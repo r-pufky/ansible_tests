@@ -1,0 +1,40 @@
+---
+# Test existence of line in file.
+#
+# Args:
+#   test_name: str - Test base name.
+#   test_file: str - Path to remote file to test.
+#   test_line: str - Line to test.
+#   test_state: str - Line state.
+
+- name: '{{ test_name }} | check requirements'  # noqa name[template]
+  ansible.builtin.assert:
+    quiet: true
+    that:
+      - test_name | length > 0
+      - test_file | length > 0
+      - test_line | length > 0
+      - test_state | length > 0
+    fail_msg: |
+      tests.lineinfile requires:
+
+      test_name: '{{ test_name }}'
+      test_file: '{{ test_file }}'
+      test_line: '{{ test_line }}'
+      test_state: '{{ test_state }}'
+
+- name: '{{ test_name }} | query'  # noqa name[template]
+  ansible.builtin.lineinfile:
+    name: '{{ test_file }}'
+    line: '{{ test_line }}'
+    state: '{{ test_state }}'
+  check_mode: true
+  diff: true
+  register: _tests_result
+
+- name: '{{ test_name }} | assert'  # noqa name[template]
+  ansible.builtin.assert:
+    quiet: true
+    that:
+      - not _tests_result.changed
+    fail_msg: '{{ test_file }} is not in expected format.'
