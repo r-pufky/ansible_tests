@@ -1,4 +1,7 @@
 ---
+###############################################################################
+# File
+###############################################################################
 # Test file existence and permissions.
 #
 # Args:
@@ -8,6 +11,7 @@
 #   test_group: str - File group (GID or groupname).
 #   test_mode: str - File permissions (octal or permission string).
 #   test_state: str - File state to test.
+#   test_diff: bool - Display file diff on failure? Default: False.
 
 - name: '{{ test_name }} | check requirements'  # noqa name[template]
   ansible.builtin.assert:
@@ -37,7 +41,7 @@
     mode: '{{ test_mode }}'
     state: '{{ test_state }}'
   check_mode: true
-  diff: true
+  diff: '{{ test_diff | default(false) }}'
   register: _tests_result
 
 - name: '{{ test_name }} | assert'  # noqa name[template]
@@ -45,4 +49,8 @@
     quiet: true
     that:
       - not _tests_result.changed
-    fail_msg: '{{ test_file }} should exist with correct permissions.'
+    fail_msg: |
+
+      ✘ TEST FAILED.
+
+      {{ test_file }} should exist with correct permissions.

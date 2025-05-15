@@ -1,4 +1,7 @@
 ---
+###############################################################################
+# Assertions
+###############################################################################
 # Test assert logic in roles.
 #
 # Assertions MUST be tested in the converge step as it requires applying the
@@ -42,10 +45,14 @@
       ansible.builtin.debug:
         msg: |
 
-          TEST PASSED.
+          ✔ TEST PASSED.
 
   always:
     - name: '{{ test_name }} | FAIL'  # noqa name[template]
       when: _tests_failed
       ansible.builtin.fail:
-        msg: '{{ test_fail_message }}'
+        msg: |
+
+          ✘ TEST FAILED.
+
+          {{ test_fail_message }}

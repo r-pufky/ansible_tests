@@ -1,0 +1,32 @@
+---
+###############################################################################
+# Create Cache
+###############################################################################
+# Create testing cache location for dynamic testing files.
+#
+# Cache creation is usually done in prepare step.
+#
+# Generates:
+#   test_name: str - Test base name.
+#   test_cache: str - local directory to create cache.
+#       Default: 'MOLECULE_PROJECT_DIRECTORY/molecule/cache'.
+
+- name: '{{ test_name }} | check requirements'  # noqa name[template]
+  ansible.builtin.assert:
+    quiet: true
+    that:
+      - test_name | length > 0
+    fail_msg: |
+      tests.create_cache requires:
+
+      test_name: '{{ test_name }}'
+
+- name: '{{ test_name }} | create cache'  # noqa name[template]
+  ansible.builtin.file:
+    path: '{{
+        test_cache |
+        default(lookup("env", "MOLECULE_PROJECT_DIRECTORY") ~
+                "/molecule/cache")
+      }}'
+    mode: '0755'
+    state: 'directory'

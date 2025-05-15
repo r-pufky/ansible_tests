@@ -1,0 +1,48 @@
+---
+###############################################################################
+# Cache URL
+###############################################################################
+# Cache URL asset locally.
+#
+# Cache creation is usually done in prepare step.
+#
+# Generates:
+#   test_name: str - Test base name.
+#   test_cache: str - Local directory to create cache.
+#   test_dest: str - Relative test_cache download destination.
+#   test_url: str - URL to download asset from.
+#   test_mode: str - File permissions (octal or permission string).
+#       Default: '0644'.
+#   test_retries: int - Number of retries for failed URL. Default: 5.
+#   test_delay: int - Delay in second between retries. Default: 5.
+
+- name: '{{ test_name }} | check requirements'  # noqa name[template]
+  ansible.builtin.assert:
+    quiet: true
+    that:
+      - test_name | length > 0
+      - test_cache | length > 0
+      - test_dest | length > 0
+      - test_url | length > 0
+    fail_msg: |
+      tests.cache_url requires:
+
+      test_name: '{{ test_name }}'
+      test_cache: '{{ test_cache }}'
+      test_dest: '{{ test_dest }}'
+      test_url: '{{ test_url }}'
+
+- name: '{{ test_name }} | check cache'  # noqa name[template]
+  ansible.builtin.stat:
+    path:
+      '{{ _test_cache }}/{{ test_dest }}'
+  register: _test_prepare
+
+- name: '{{ test_name }} | cache {{ test_dest }}'  # noqa name[template]
+  when: not _test_prepare.stat.exists
+  ansible.builtin.get_url:
+    url: '{{ test_url }}'
+    dest: '{{ _test_cache }}/{{ test_dest }}'
+    mode: '{{ test_mode | default("0644") }}'
+  retries: '{{ test_retries | default(5) }}'
+  delay: '{{ test_delay | default(5) }}'
