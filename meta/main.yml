@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: 'tests'
   author: 'r_pufky'
   description: 'Ansible Testing Middleware'
   company: 'N/A'
