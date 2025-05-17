@@ -20,7 +20,7 @@
       - test_line | length > 0
       - test_state | length > 0
     fail_msg: |
-      tests.lineinfile requires:
+      ⚠ tests.lineinfile requires:
 
       test_name: '{{ test_name }}'
       test_file: '{{ test_file }}'

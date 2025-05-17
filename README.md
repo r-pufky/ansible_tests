@@ -4,13 +4,12 @@ Common testing patterns for ansible roles.
 ## Requirements
 [supported platforms](https://github.com/r-pufky/ansible_tests/blob/main/meta/main.yml)
 
-[collections/roles](https://github.com/r-pufky/ansible_tests/blob/main/meta/requirements.yml)
-
 ## Role Variables
 [defaults](https://github.com/r-pufky/ansible_tests/tree/main/defaults/main/)
 
 ## Dependencies
-All tests are pure ansible tasks and should be platform agnostic.
+**galaxy-ng** roles cannot be used independently. Part of
+[r_pufky.lib](https://github.com/r-pufky/ansible_collection_lib) collection.
 
 ## Example Playbook
 Only use this role during Molecule testing and never for live roles. See each
@@ -26,7 +25,7 @@ converge.yml
 ``` yaml
 - name: 'role my_role fails when mutually exclusive assertion logic fails'
   ansible.builtin.include_role:
-    name: 'r_pufky.tests'
+    name: 'r_pufky.lib.tests'
     tasks_from: 'assertions.yml'
   vars:
     test_name: 'test mutually-exclusive gate'
@@ -45,7 +44,7 @@ prepare.yml
 ``` yaml
 - name: 'Cache fonts-test-font.ttf'
   ansible.builtin.include_role:
-    name: 'r_pufky.tests'
+    name: 'r_pufky.lib.tests'
     tasks_from: 'cache_url.yml'
   vars:
     test_name: 'Cache fonts-test-font.ttf'
@@ -67,7 +66,7 @@ verify.yml
 ``` yaml
 - name: 'Verify cert.pem'
   ansible.builtin.include_role:
-    name: 'r_pufky.tests'
+    name: 'r_pufky.lib.tests'
     tasks_from: 'copy.yml'
   vars:
     test_name: 'Verify cert.pem'
@@ -87,7 +86,7 @@ prepare.yml
 ``` yaml
 - name: 'Prepare cache'
   ansible.builtin.include_role:
-    name: 'r_pufky.tests'
+    name: 'r_pufky.lib.tests'
     tasks_from: 'create_cache.yml'
   vars:
     test_name: 'Prepare cache'
@@ -101,7 +100,7 @@ verify.yml
 ``` yaml
 - name: 'Verify permissions'
   ansible.builtin.include_role:
-    name: 'r_pufky.tests'
+    name: 'r_pufky.lib.tests'
     tasks_from: 'file.yml'
   vars:
     test_name: 'Verify permissions | {{ item }}'
@@ -124,7 +123,7 @@ verify.yml
 ``` yaml
 - name: 'Verify | assert postgres settings'
   ansible.builtin.include_role:
-    name: 'r_pufky.tests'
+    name: 'r_pufky.lib.tests'
     tasks_from: 'lineinfile.yml'
   vars:
     test_name: 'Verify | assert postgres settings | {{ item }}'
@@ -153,7 +152,7 @@ verify.yml
 ``` yaml
 - name: 'Verify | app.ini'
   ansible.builtin.include_role:
-    name: 'r_pufky.tests'
+    name: 'r_pufky.lib.tests'
     tasks_from: 'remote_file_diff.yml'
   vars:
     test_name: 'Verify | app.ini'
@@ -172,7 +171,7 @@ verify.yml
 ``` yaml
 - name: 'Verify sysctl'
   ansible.builtin.include_role:
-    name: 'r_pufky.tests'
+    name: 'r_pufky.lib.tests'
     tasks_from: 'sysctl.yml'
   vars:
     test_name: 'Verify sysctl'
@@ -188,7 +187,7 @@ verify.yml
 ``` yaml
     - name: 'Verify /etc/network/interfaces'
       ansible.builtin.include_role:
-        name: 'r_pufky.tests'
+        name: 'r_pufky.lib.tests'
         tasks_from: 'template.yml'
       vars:
         test_name: 'Verify /etc/network/interfaces'

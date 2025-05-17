@@ -20,7 +20,7 @@
       - test_role | length > 0
       - test_fail_message | length > 0
     fail_msg: |
-      tests.assertions requires:
+      ⚠ tests.assertions requires:
 
       test_name: '{{ test_name }}'
       test_role: '{{ test_role }}'

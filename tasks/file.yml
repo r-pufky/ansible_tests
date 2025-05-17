@@ -24,7 +24,7 @@
       - test_mode | length > 0
       - test_state | length > 0
     fail_msg: |
-      tests.file requires:
+      ⚠ tests.file requires:
 
       test_name: '{{ test_name }}'
       test_file: '{{ test_file }}'

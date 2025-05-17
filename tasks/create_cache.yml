@@ -9,7 +9,7 @@
 # Generates:
 #   test_name: str - Test base name.
 #   test_cache: str - local directory to create cache.
-#       Default: 'MOLECULE_PROJECT_DIRECTORY/molecule/cache'.
+#       Default: '{MOLECULE_PROJECT_DIRECTORY}/molecule/cache'.
 
 - name: '{{ test_name }} | check requirements'  # noqa name[template]
   ansible.builtin.assert:
@@ -17,7 +17,7 @@
     that:
       - test_name | length > 0
     fail_msg: |
-      tests.create_cache requires:
+      ⚠ tests.create_cache requires:
 
       test_name: '{{ test_name }}'
 

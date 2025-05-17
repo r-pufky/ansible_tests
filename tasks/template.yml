@@ -25,7 +25,7 @@
       - test_group | length > 0
       - test_mode | length > 0
     fail_msg: |
-      tests.template requires:
+      ⚠ tests.template requires:
 
       test_name: '{{ test_name }}'
       test_src: '{{ test_src }}'
