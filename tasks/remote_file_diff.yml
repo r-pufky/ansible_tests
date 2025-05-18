@@ -65,4 +65,4 @@
 
       {{ test_file }} is not in expected format.
 
-      {{ _tests_result_diff.stdout if test_diff else "" }}
+      {{ _tests_result_diff.stdout if test_diff | default(false) else "" }}
