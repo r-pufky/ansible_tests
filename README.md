@@ -5,7 +5,17 @@ Common testing patterns for ansible roles.
 [supported platforms](https://github.com/r-pufky/ansible_tests/blob/main/meta/main.yml)
 
 ## Role Variables
-[defaults](https://github.com/r-pufky/ansible_tests/tree/main/defaults/main/)
+Variables are passed directly to the task being called.
+
+[assertions](https://github.com/r-pufky/ansible_tests/tree/main/tasks/assertions.yml)
+[cache_url](https://github.com/r-pufky/ansible_tests/tree/main/tasks/cache_url.yml)
+[copy](https://github.com/r-pufky/ansible_tests/tree/main/tasks/copy.yml)
+[create_cache](https://github.com/r-pufky/ansible_tests/tree/main/tasks/create_cache.yml)
+[file](https://github.com/r-pufky/ansible_tests/tree/main/tasks/file.yml)
+[lineinfile](https://github.com/r-pufky/ansible_tests/tree/main/tasks/lineinfile.yml)
+[remote_file_diff](https://github.com/r-pufky/ansible_tests/tree/main/tasks/remote_file_diff.yml)
+[sysctl](https://github.com/r-pufky/ansible_tests/tree/main/tasks/sysctl.yml)
+[template](https://github.com/r-pufky/ansible_tests/tree/main/tasks/template.yml)
 
 ## Dependencies
 **galaxy-ng** roles cannot be used independently. Part of
@@ -15,11 +25,15 @@ Common testing patterns for ansible roles.
 Only use this role during Molecule testing and never for live roles. See each
 task for detailed argument list. Tasks must be explicitly called.
 
-### assertions (assert logic)
+### Assertion Testing
+
+#### assertions (assert logic)
 Verify assertion logic for roles are trigger correctly.
 
 Assertion tests must be called during the **coverage** step; otherwise failures
 will never allow Molecule to reach the verification step.
+
+[assertions](https://github.com/r-pufky/ansible_tests/tree/main/tasks/assertions.yml)
 
 converge.yml
 ``` yaml
@@ -35,10 +49,14 @@ converge.yml
     my_other_var: 'alternative'
 ```
 
-### cache_url (remote URL file caching)
+### Test Caching
+
+#### cache_url (remote URL file caching)
 Download and cache a remote file for dynamic testing.
 
 Downloads a remote URL asset cache location if it does not exist.
+
+[cache_url](https://github.com/r-pufky/ansible_tests/tree/main/tasks/cache_url.yml)
 
 prepare.yml
 ``` yaml
@@ -51,36 +69,15 @@ prepare.yml
     test_cache: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/cache'
     test_dest: 'fonts-test-font.ttf'
     test_url: 'https://github.com/google/fonts/blob/main/ufl/ubuntu/Ubuntu-Regular.ttf'
-    test_mode: str - File permissions (octal or permission string).
+    test_mode: '0644'
     test_retries: 5
     test_delay: 5
 ```
 
-### copy (static file testing)
-Static test file contents and permissions.
-
-Copies a known good testing file to remote system and validates target file is
-the same.
-
-verify.yml
-``` yaml
-- name: 'Verify cert.pem'
-  ansible.builtin.include_role:
-    name: 'r_pufky.lib.tests'
-    tasks_from: 'copy.yml'
-  vars:
-    test_name: 'Verify cert.pem'
-    test_src: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/cache/cert.pem'
-    test_remote_src: false
-    test_file: '/etc/mail/cert.pem'
-    test_owner: 'mail'
-    test_group: 'mail'
-    test_mode: '0400'
-    test_diff: false
-```
-
-### create_cache (create caching location)
+#### create_cache (create caching location)
 Create testing cache location for dynamic testing files.
+
+[create_cache](https://github.com/r-pufky/ansible_tests/tree/main/tasks/create_cache.yml)
 
 prepare.yml
 ``` yaml
@@ -93,8 +90,13 @@ prepare.yml
     test_cache: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/cache'
 ```
 
-### file (existence and permissions)
+### Test Frameworks
+Standardized interfaces for commong file/directory test with diff options.
+
+#### file (existence and permissions)
 Test file existence and permissions. May be applied to file **or** directories.
+
+[file](https://github.com/r-pufky/ansible_tests/tree/main/tasks/file.yml)
 
 verify.yml
 ``` yaml
@@ -116,8 +118,35 @@ verify.yml
     - '/var/lib/forgejo/tmp/local-repo'
 ```
 
-### lineinfile (existence of line in file)
+#### copy (static file testing)
+Static test file contents and permissions.
+
+Copies a known good testing file to remote system and validates target file is
+the same.
+
+[copy](https://github.com/r-pufky/ansible_tests/tree/main/tasks/copy.yml)
+
+verify.yml
+``` yaml
+- name: 'Verify cert.pem'
+  ansible.builtin.include_role:
+    name: 'r_pufky.lib.tests'
+    tasks_from: 'copy.yml'
+  vars:
+    test_name: 'Verify cert.pem'
+    test_src: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/cache/cert.pem'
+    test_remote_src: false
+    test_file: '/etc/mail/cert.pem'
+    test_owner: 'mail'
+    test_group: 'mail'
+    test_mode: '0400'
+    test_diff: false
+```
+
+#### lineinfile (existence of line in file)
 Test existence of line in file.
+
+[lineinfile](https://github.com/r-pufky/ansible_tests/tree/main/tasks/lineinfile.yml)
 
 verify.yml
 ``` yaml
@@ -139,7 +168,7 @@ verify.yml
     - 'PASSWD = `test`'
 ```
 
-### remote_file_diff (dynamic runtime file testing)
+#### remote_file_diff (dynamic runtime file testing)
 Remote test file contents and permissions.
 
 Tests requiring run-time options (e.g. injected hashes that must exist but
@@ -147,6 +176,8 @@ are random per-run) should use this instead of copy test to verify file
 contents are the same. Both files must exist on the remote system (generally
 requiring the source of truth file to be rendered on the remote host in
 converge).
+
+[remote_file_diff](https://github.com/r-pufky/ansible_tests/tree/main/tasks/remote_file_diff.yml)
 
 verify.yml
 ``` yaml
@@ -167,6 +198,8 @@ verify.yml
 ### sysctl (sysctl kernel option)
 test sysctl setting.
 
+[sysctl](https://github.com/r-pufky/ansible_tests/tree/main/tasks/sysctl.yml)
+
 verify.yml
 ``` yaml
 - name: 'Verify sysctl'
@@ -180,8 +213,10 @@ verify.yml
     test_diff: false
 ```
 
-### template (remote template)
+#### template (remote template)
 Remote test file against template.
+
+[template](https://github.com/r-pufky/ansible_tests/tree/main/tasks/template.yml)
 
 verify.yml
 ``` yaml
