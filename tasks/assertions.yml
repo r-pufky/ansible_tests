@@ -44,8 +44,11 @@
     - name: '{{ test_name }} | PASS ✔'  # noqa name[template]
       ansible.builtin.debug:
         msg: |
-
-          ✔ TEST PASSED.
+          ╭───────────────────────────────────────────────────────────────────╮
+          │                                                                   │
+          │                           TEST PASSED.                            │
+          │                                                                   │
+          ╰───────────────────────────────────────────────────────────────────╯
 
   always:
     - name: '{{ test_name }} | FAIL ✘'  # noqa name[template]
