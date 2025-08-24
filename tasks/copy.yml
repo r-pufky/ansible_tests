@@ -25,14 +25,17 @@
       - test_group | length > 0
       - test_mode | length > 0
     fail_msg: |
-      ⚠ tests.copy requires:
-
-      test_name: '{{ test_name }}'
-      test_src: '{{ test_src }}'
-      test_file: '{{ test_file }}'
-      test_owner: '{{ test_owner }}'
-      test_group: '{{ test_group }}'
-      test_mode: '{{ test_mode }}'
+      ╭───────────────────────────────────────────────────────────────────╮
+      │                                                                   │
+      │                        tests.copy requires                        │
+      │                                                                   │
+      ├───────────────────────────────────────────────────────────────────╯
+      │ test_name: '{{ test_name }}'
+      │ test_src: '{{ test_src }}'
+      │ test_file: '{{ test_file }}'
+      │ test_owner: '{{ test_owner }}'
+      │ test_group: '{{ test_group }}'
+      │ test_mode: '{{ test_mode }}'
 
 - name: '{{ test_name }} | query'  # noqa name[template]
   ansible.builtin.copy:
@@ -52,9 +55,11 @@
     that:
       - not _tests_result.changed
     fail_msg: |
-
-      ✘ TEST FAILED.
-
-      {{ test_file }} is not in expected format.
-
-      {{ _tests_result.diff if test_diff | default(false) else "" }}
+      ╭───────────────────────────────────────────────────────────────────╮
+      │                                                                   │
+      │                           TEST FAILED.                            │
+      │                                                                   │
+      ├───────────────────────────────────────────────────────────────────╯
+      │ {{ test_file }} is not in expected format.
+      │
+      │ {{ _tests_result.diff if test_diff | default(false) else "" }}

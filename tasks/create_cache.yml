@@ -17,9 +17,12 @@
     that:
       - test_name | length > 0
     fail_msg: |
-      ⚠ tests.create_cache requires:
-
-      test_name: '{{ test_name }}'
+      ╭───────────────────────────────────────────────────────────────────╮
+      │                                                                   │
+      │                    tests.create_cache requires                    │
+      │                                                                   │
+      ├───────────────────────────────────────────────────────────────────╯
+      │ test_name: '{{ test_name }}'
 
 - name: '{{ test_name }} | create cache'  # noqa name[template]
   ansible.builtin.file:

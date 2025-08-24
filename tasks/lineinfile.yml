@@ -20,12 +20,15 @@
       - test_line | length > 0
       - test_state | length > 0
     fail_msg: |
-      ⚠ tests.lineinfile requires:
-
-      test_name: '{{ test_name }}'
-      test_file: '{{ test_file }}'
-      test_line: '{{ test_line }}'
-      test_state: '{{ test_state }}'
+      ╭───────────────────────────────────────────────────────────────────╮
+      │                                                                   │
+      │                     tests.lineinfile requires                     │
+      │                                                                   │
+      ├───────────────────────────────────────────────────────────────────╯
+      │ test_name: '{{ test_name }}'
+      │ test_file: '{{ test_file }}'
+      │ test_line: '{{ test_line }}'
+      │ test_state: '{{ test_state }}'
 
 - name: '{{ test_name }} | query'  # noqa name[template]
   ansible.builtin.lineinfile:
@@ -42,7 +45,9 @@
     that:
       - not _tests_result.changed
     fail_msg: |
-
-      ✘ TEST FAILED.
-
-      {{ test_file }} is not in expected format.
+      ╭───────────────────────────────────────────────────────────────────╮
+      │                                                                   │
+      │                           TEST FAILED.                            │
+      │                                                                   │
+      ├───────────────────────────────────────────────────────────────────╯
+      │ {{ test_file }} is not in expected format.

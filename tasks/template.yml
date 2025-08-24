@@ -25,14 +25,17 @@
       - test_group | length > 0
       - test_mode | length > 0
     fail_msg: |
-      ⚠ tests.template requires:
-
-      test_name: '{{ test_name }}'
-      test_src: '{{ test_src }}'
-      test_file: '{{ test_file }}'
-      test_owner: '{{ test_owner }}'
-      test_group: '{{ test_group }}'
-      test_mode: '{{ test_mode }}'
+      ╭───────────────────────────────────────────────────────────────────╮
+      │                                                                   │
+      │                      tests.template requires                      │
+      │                                                                   │
+      ├───────────────────────────────────────────────────────────────────╯
+      │ test_name: '{{ test_name }}'
+      │ test_src: '{{ test_src }}'
+      │ test_file: '{{ test_file }}'
+      │ test_owner: '{{ test_owner }}'
+      │ test_group: '{{ test_group }}'
+      │ test_mode: '{{ test_mode }}'
 
 - name: '{{ test_name }} | query'  # noqa name[template]
   ansible.builtin.template:
@@ -53,7 +56,9 @@
     that:
       - not _test_result.changed
     fail_msg: |
-
-      ✘ TEST FAILED.
-
-      {{ test_file }} is not in expected format.
+      ╭───────────────────────────────────────────────────────────────────╮
+      │                                                                   │
+      │                           TEST FAILED.                            │
+      │                                                                   │
+      ├───────────────────────────────────────────────────────────────────╯
+      │ {{ test_file }} is not in expected format.

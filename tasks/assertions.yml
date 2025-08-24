@@ -20,11 +20,14 @@
       - test_role | length > 0
       - test_fail_message | length > 0
     fail_msg: |
-      ⚠ tests.assertions requires:
-
-      test_name: '{{ test_name }}'
-      test_role: '{{ test_role }}'
-      test_fail_message: '{{ test_fail_message }}'
+      ╭───────────────────────────────────────────────────────────────────╮
+      │                                                                   │
+      │                     tests.assertions requires                     │
+      │                                                                   │
+      ├───────────────────────────────────────────────────────────────────╯
+      │ test_name: '{{ test_name }}'
+      │ test_role: '{{ test_role }}'
+      │ test_fail_message: '{{ test_fail_message }}'
 
 - name: '{{ test_name }}'
   block:
@@ -55,7 +58,9 @@
       when: _tests_failed
       ansible.builtin.fail:
         msg: |
-
-          ✘ TEST FAILED.
-
-          {{ test_fail_message }}
+          ╭───────────────────────────────────────────────────────────────────╮
+          │                                                                   │
+          │                           TEST FAILED.                            │
+          │                                                                   │
+          ├───────────────────────────────────────────────────────────────────╯
+          │ {{ test_fail_message }}
