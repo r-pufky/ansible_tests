@@ -8,6 +8,7 @@ Common testing patterns for ansible roles.
 Variables are passed directly to the task being called.
 
 [assertions](https://github.com/r-pufky/ansible_tests/tree/main/tasks/assertions.yml)
+[cache_git](https://github.com/r-pufky/ansible_tests/tree/main/tasks/cache_git.yml)
 [cache_url](https://github.com/r-pufky/ansible_tests/tree/main/tasks/cache_url.yml)
 [copy](https://github.com/r-pufky/ansible_tests/tree/main/tasks/copy.yml)
 [create_cache](https://github.com/r-pufky/ansible_tests/tree/main/tasks/create_cache.yml)
@@ -50,6 +51,28 @@ converge.yml
 ```
 
 ### Test Caching
+
+#### cache_git (source GIT file caching)
+Download and cache a source-only git repository for dynamic testing.
+
+Downloads a GIT source asset locally.
+
+[cache_url](https://github.com/r-pufky/ansible_tests/tree/main/tasks/cache_git.yml)
+
+prepare.yml
+``` yaml
+- name: 'Cache balloon hashing'
+  ansible.builtin.include_role:
+    name: 'r_pufky.lib.tests'
+    tasks_from: 'cache_git.yml'
+  vars:
+    test_name: 'Cache balloon hashing'
+    test_cache: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/cache'
+    test_dest: 'balloon'
+    test_repo: 'https://github.com/nachonavarro/balloon-hashing'
+    test_retries: 5
+    test_delay: 5
+```
 
 #### cache_url (remote URL file caching)
 Download and cache a remote file for dynamic testing.
